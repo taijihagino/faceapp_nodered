@@ -1,0 +1,17 @@
+<h1>Visual Recognition v3 Image Analysis</h1>
+<p>解析画像: {{result.images.0.resolved_url}}<br/><img id="image" src="{{result.images.0.resolved_url}}" height="200"/></p>
+{{^result}}
+    <P>顔認識できませんでした</P>
+{{/result}}
+<!-- <p>Images Processed: {{result.images_processed}}</p> -->
+<table border='1'>
+    <thead><tr><th>年齢</th><th>確信度</th><th>性別</th><th>確信度</th><th>名前(著名人の場合)</th><th>確信度</th></tr></thead>
+    {{#result.images.0.faces}}<tr>
+        <td><b>{{age.min}} - {{age.max}}</b></td><td><i>{{age.score}}</i></td>
+        <td>{{gender.gender}}</td><td>{{gender.score}}</td>
+        <td>{{identity.name}}</td><td>{{identity.score}}</td>
+    </tr>{{/result.images.0.faces}}
+</table>
+<form  action="{{req._parsedUrl.pathname}}">
+    <br><input type="submit" value="戻る"/>
+</form>

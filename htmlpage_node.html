@@ -1,0 +1,19 @@
+<h1>Watson Visual Recognition Face Detection app</h1>
+<H2>誰の画像を解析しますか？</H2>
+<form  action="{{req._parsedUrl.pathname}}">
+    <img src="https://nodered.jp/images/kojo.jpg" height='150' onclick="setImgURL('https://nodered.jp/images/kojo.jpg');"/>
+    <img src="https://nodered.jp/images/seigo.jpg" height='150' onclick="setImgURL('https://nodered.jp/images/seigo.jpg');"/>
+    <img src="https://nodered.jp/images/hagino.jpg" height='150' onclick="setImgURL('https://nodered.jp/images/hagino.jpg');"/>
+    <img src="https://nodered.jp/images/yokoi.jpg" height='150' onclick="setImgURL('https://nodered.jp/images/yokoi.jpg');"/>
+    <img src="https://nodered.jp/images/oohira.jpg" height='150' onclick="setImgURL('https://nodered.jp/images/oohira.jpg');"/>
+    <img src="https://nodered.jp/images/wentz.jpg" height='150' onclick="setImgURL('https://nodered.jp/images/wentz.jpg');"/>
+        <br/>上の画像をクリックすると画像のURLがコピーされます。<br>または任意の画像URLを下の”画像URL”へ入力します。<br>最後に”解析する”ボタンを押してください。<br/>
+    <br>画像URL: <input type="text" name="imageurl" id="imageurl"/>
+    <input type="submit" value="解析する"/>
+</form>
+
+<script>
+function setImgURL(imageUrl){
+    document.getElementById('imageurl').value=imageUrl;
+}
+</script>
