@@ -1,0 +1,151 @@
+[
+    {
+        "id": "e53d98f2.3471d8",
+        "type": "tab",
+        "label": "Face Detection App"
+    },
+    {
+        "id": "dfd03260.5386a",
+        "type": "change",
+        "z": "e53d98f2.3471d8",
+        "name": "Extract image URL",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.imageurl",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1185,
+        "y": 555,
+        "wires": [
+            [
+                "a86a3f74.f02e7"
+            ]
+        ]
+    },
+    {
+        "id": "a35caac7.39e2b8",
+        "type": "switch",
+        "z": "e53d98f2.3471d8",
+        "name": "Check image url",
+        "property": "payload.imageurl",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "outputs": 2,
+        "x": 1215,
+        "y": 395,
+        "wires": [
+            [
+                "f704eb18.b56ce8"
+            ],
+            [
+                "dfd03260.5386a"
+            ]
+        ]
+    },
+    {
+        "id": "ee9d282d.eb96e8",
+        "type": "http in",
+        "z": "e53d98f2.3471d8",
+        "name": "",
+        "url": "/face",
+        "method": "get",
+        "swaggerDoc": "",
+        "x": 1015,
+        "y": 395,
+        "wires": [
+            [
+                "a35caac7.39e2b8"
+            ]
+        ]
+    },
+    {
+        "id": "f704eb18.b56ce8",
+        "type": "template",
+        "z": "e53d98f2.3471d8",
+        "name": "HTML Page",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<h1>Watson Visual Recognition Face Detection app</h1>\n<H2>誰の画像を解析しますか？</H2>\n<form  action=\"{{req._parsedUrl.pathname}}\">\n    <img src=\"https://nodered.jp/images/kojo.jpg\" height='150' onclick=\"setImgURL('https://nodered.jp/images/kojo.jpg');\"/>\n    <img src=\"https://nodered.jp/images/seigo.jpg\" height='150' onclick=\"setImgURL('https://nodered.jp/images/seigo.jpg');\"/>\n    <img src=\"https://nodered.jp/images/hagino.jpg\" height='150' onclick=\"setImgURL('https://nodered.jp/images/hagino.jpg');\"/>\n    <img src=\"https://nodered.jp/images/yokoi.jpg\" height='150' onclick=\"setImgURL('https://nodered.jp/images/yokoi.jpg');\"/>\n    <img src=\"https://nodered.jp/images/oohira.jpg\" height='150' onclick=\"setImgURL('https://nodered.jp/images/oohira.jpg');\"/>\n    <img src=\"https://nodered.jp/images/wentz.jpg\" height='150' onclick=\"setImgURL('https://nodered.jp/images/wentz.jpg');\"/>\n        <br/>上の画像をクリックすると画像のURLがコピーされます。<br>または任意の画像URLを下の”画像URL”へ入力します。<br>最後に”解析する”ボタンを押してください。<br/>\n    <br>画像URL: <input type=\"text\" name=\"imageurl\" id=\"imageurl\"/>\n    <input type=\"submit\" value=\"解析する\"/>\n</form>\n\n<script>\nfunction setImgURL(imageUrl){\n    document.getElementById('imageurl').value=imageUrl;\n}\n</script>",
+        "x": 1465,
+        "y": 395,
+        "wires": [
+            [
+                "61867348.b0e57c"
+            ]
+        ]
+    },
+    {
+        "id": "fe74e5da.45e488",
+        "type": "template",
+        "z": "e53d98f2.3471d8",
+        "name": "Report faces via HTML template",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<h1>Visual Recognition v3 Image Analysis</h1>\n<p>解析画像: {{result.images.0.resolved_url}}<br/><img id=\"image\" src=\"{{result.images.0.resolved_url}}\" height=\"200\"/></p>\n{{^result}}\n    <P>顔認識できませんでした</P>\n{{/result}}\n<!-- <p>Images Processed: {{result.images_processed}}</p> -->\n<table border='1'>\n    <thead><tr><th>年齢</th><th>確信度</th><th>性別</th><th>確信度</th><th>名前(著名人の場合)</th><th>確信度</th></tr></thead>\n    {{#result.images.0.faces}}<tr>\n        <td><b>{{age.min}} - {{age.max}}</b></td><td><i>{{age.score}}</i></td>\n        <td>{{gender.gender}}</td><td>{{gender.score}}</td>\n        <td>{{identity.name}}</td><td>{{identity.score}}</td>\n    </tr>{{/result.images.0.faces}}\n</table>\n<form  action=\"{{req._parsedUrl.pathname}}\">\n    <br><input type=\"submit\" value=\"戻る\"/>\n</form>\n",
+        "x": 1525,
+        "y": 495,
+        "wires": [
+            [
+                "61867348.b0e57c"
+            ]
+        ]
+    },
+    {
+        "id": "61867348.b0e57c",
+        "type": "http response",
+        "z": "e53d98f2.3471d8",
+        "name": "",
+        "x": 1825,
+        "y": 395,
+        "wires": []
+    },
+    {
+        "id": "a86a3f74.f02e7",
+        "type": "visual-recognition-v3",
+        "z": "e53d98f2.3471d8",
+        "name": "",
+        "apikey": "__PWRD__",
+        "image-feature": "detectFaces",
+        "x": 1195,
+        "y": 695,
+        "wires": [
+            [
+                "fe74e5da.45e488",
+                "4c3eb003.51bbc"
+            ]
+        ]
+    },
+    {
+        "id": "4c3eb003.51bbc",
+        "type": "debug",
+        "z": "e53d98f2.3471d8",
+        "name": "Print msg.result.images",
+        "active": true,
+        "console": "false",
+        "complete": "result.images",
+        "x": 1503,
+        "y": 693,
+        "wires": []
+    }
+]
